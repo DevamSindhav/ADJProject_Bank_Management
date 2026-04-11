@@ -1,0 +1,34 @@
+# Compiled class files
+*.class
+build/
+bin/
+
+# Eclipse metadata and configuration
+.metadata/
+.settings/
+.loadpath
+.classpath
+
+# Temporary files and logs
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+hs_err_pid*
+
+# External Dependencies (JARs)
+# This prevents uploading the libraries from your webapp folder
+src/main/webapp/WEB-INF/lib/
+*.jar
+
+# Package Files
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Sensitive Info (If you create a separate config file for DB later)
+config.properties

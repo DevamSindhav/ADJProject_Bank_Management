@@ -1,0 +1,80 @@
+package com.bank.controller;
+
+import com.bank.dao.CustomerDAO;
+import com.bank.util.PasswordUtil;
+
+import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.ServletException;
+
+import java.io.IOException;
+
+@WebServlet("/UpdatePasswordServlet")
+public class UpdatePasswordServlet extends HttpServlet{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public void doPost(HttpServletRequest req , HttpServletResponse resp)
+				throws ServletException , IOException
+	{
+		
+		try {
+			
+			HttpSession session = req.getSession(false);
+			
+			if(session != null && session.getAttribute("accNo") != null) {
+				
+				int accNo = (int) session.getAttribute("accNo");
+				String oldPlainPass = (String) req.getParameter("oldPassword");
+				String newPlainPass = (String) req.getParameter("newPassword");
+				
+				
+				CustomerDAO cDao = new CustomerDAO();
+				
+				if(PasswordUtil.checkPassword(oldPlainPass, cDao.getPassword(accNo) )) {
+					
+					String hasedNewPass = PasswordUtil.hashPassword(newPlainPass);
+					boolean isSuccess = cDao.updatePassword(accNo, hasedNewPass);
+					
+					if(isSuccess) {
+						
+						//We need to invalidate session after changing password
+						session.invalidate();
+						
+						//sendRedirect to Login Page
+						
+					}
+					else {
+						
+						//SendRedirect saying pin server error
+						
+					}
+					
+				}
+				else {
+					
+					//sendReditect Change password page with error message password incorrect
+					
+				}
+				
+			}
+			else {
+				
+				//session not created redirect to LoginPage
+				
+			}
+			
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			//sendRedirect to error Page or error message
+			
+		}
+		
+	}
+	
+	
+}
