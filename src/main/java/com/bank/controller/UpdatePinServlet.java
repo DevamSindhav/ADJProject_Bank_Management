@@ -42,33 +42,38 @@ public class UpdatePinServlet extends HttpServlet{
 					if(isSuccess) {
 						
 						//SendRedirect to Dash board with message saying changed pin successfully
-						
+						resp.sendRedirect("DashBoardServlet?status=pin_updated");
+						return;
 					}
 					else {
 						
 						//SendRedirect saying pin server error
-						
+						resp.sendRedirect("changepin.jsp?error=server_error");
+						return;
 					}
 					
 				}
 				else {
 					
 					//sendReditect Change pin page with error message password incorrect
-					
+					resp.sendRedirect("changepin.jsp?error=invalid_password");
+					return;
 				}
 				
 			}
 			else {
 				
 				//session not created redirect to LoginPage
-				
+				resp.sendRedirect("login.jsp?error=unauthorized");
+				return;
 			}
 			
 		}catch(Exception e) {
 			
 			e.printStackTrace();
 			//sendRedirect to error Page or error message
-			
+			resp.sendRedirect("changepin.jsp?error=server_error");
+			return;
 		}
 		
 	}

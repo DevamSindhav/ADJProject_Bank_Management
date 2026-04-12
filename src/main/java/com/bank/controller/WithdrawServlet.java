@@ -32,7 +32,7 @@ public class WithdrawServlet extends HttpServlet{
 				
 				int accNo = (int) session.getAttribute("accNo");
 				BigDecimal amount = new BigDecimal(req.getParameter("amount"));
-				String pin = (String) req.getParameter("pin");
+				String pin = req.getParameter("pin");
 				
 				CustomerDAO cDao = new CustomerDAO();
 				TransactionDAO tDao = new TransactionDAO();
@@ -49,7 +49,9 @@ public class WithdrawServlet extends HttpServlet{
 					//No this is necessary don't trust webPage
 						
 					BigDecimal oldBalance = cDao.getCurrentBalance(accNo);
-					if(PasswordUtil.checkPassword(pin, dbPin)){		
+					
+					if(PasswordUtil.checkPassword(pin, dbPin)){
+						
 						if(amount.compareTo(oldBalance) <= 0) {
 								
 							BigDecimal newBalance = oldBalance.subtract(amount);
@@ -62,32 +64,40 @@ public class WithdrawServlet extends HttpServlet{
 									
 								boolean transactionAdded = tDao.addNewTransaction(transaction);
 									
-								if(!transactionAdded) {
+								if(transactionAdded) {
 									//sendRedirect and message passed for error
 										
 									//@rollback to previous state not safe rollback
 									//for safe roll back we have to impliment rollback at DB level
 									//but just for a understanding
-										
+									resp.sendRedirect("DashBoardServlet?status=success");
+									return;
+								}
+								else {
 									cDao.updateBalance(accNo, oldBalance);
+									resp.sendRedirect("withdraw.jsp?error=server_error");
+									return;
 								}
 									
 							}
 							else {
 									
 								//sendRedirect stating Server Error right now!
-									
+								resp.sendRedirect("withdraw.jsp?error=server_error");
+								return;
 							}
 								
 						}
-						else {
-								
-								//Send redirect stating not enough balance in account
-								
+						else {	
+							//Send redirect stating not enough balance in account
+							resp.sendRedirect("withdraw.jsp?error=not_enough_balance");
+							return;
 						}
 					}
 					else {
 						//SendRedirect Stating InvalidPin
+						resp.sendRedirect("withdraw.jsp?error=invalid_pin");
+						return;
 					}
 						
 					//******not Checking for the customer object null or not
@@ -98,24 +108,30 @@ public class WithdrawServlet extends HttpServlet{
 				else {
 						
 					//send Redirect with message: Invalid amount
-						
+					resp.sendRedirect("withdraw.jsp?error=invalid_amount");
+					return;	
 				}
 			}
 			else {
 				
 				//sendRedirect to the Login page
-				
+				resp.sendRedirect("login.jsp?error=unauthorized");
+				return;
 			}
 			
 		}catch(NumberFormatException e) {
 			
 			e.printStackTrace();
 			//sendRedirect with the error message of illegal argument
+			resp.sendRedirect("withdraw.jsp?error=invalid_amount");
+			return;
 			
 		}catch(Exception e) {
 			
 			e.printStackTrace();
 			//sendRedirect  with error message
+			resp.sendRedirect("withdraw.jsp?error=server_error");
+			return;
 			
 		}
 	}

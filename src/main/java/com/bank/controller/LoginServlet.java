@@ -48,28 +48,36 @@ public class LoginServlet extends HttpServlet{
 						//forward to dashBoardServlet
 						//the dashboard servlet will help to make give user data and recent statements
 						//to display on dashboards
+						resp.sendRedirect("DashBoardServlet");
+						return;
 					}
 					else {
 						//sendRedirect to page with message of serverError
+						resp.sendRedirect("login.jsp?error=server_error");
+						return;
 					}
 					
 				}
 				else {
 					
 					//sendRedirect to the login page with message of incorrect password
-					
+					resp.sendRedirect("login.jsp?error=invalid_password");
+					return;
 				}
 				
 			}
 			else {
 				
 				//SendRedirect to loginPage with error message stating user not Registered
-				
+				resp.sendRedirect("login.jsp?error=user_not_registered");
+				return;
 			}
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 			//sendRedirect with the error message or redirect to error page
+			resp.sendRedirect("login.jsp?error=server_error");
+			return;
 		}
 	}
 	

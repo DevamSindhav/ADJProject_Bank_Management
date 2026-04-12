@@ -40,17 +40,23 @@ public class FullStatementServlet extends HttpServlet{
 				//RequestDispatcher reqDip = req.getRequestDispatcher( path to redirect )
 				//reqDip.forward(req , resp )
 				//forward this to the statement.jsp
+				req.getRequestDispatcher("fullstatement.jsp").forward(req,resp);
+				return;
 				
 			}
 			else {
 				
 				//sendRedirect to loginPage
+				resp.sendRedirect("login.jsp");
+				return;
 				
 			}
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 			//sendredirect error message
+			resp.sendRedirect("DashBoardServlet");
+			return;
 		}
 		
 	}

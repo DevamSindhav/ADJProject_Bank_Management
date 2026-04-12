@@ -2,11 +2,13 @@ package com.bank.dao;
 
 import com.bank.util.DBConnection;
 import com.bank.model.Customer;
+import com.bank.model.Transaction;
+
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-//import java.sql.Statement;
+
 import java.math.BigDecimal;
 
 public class CustomerDAO{
@@ -33,17 +35,34 @@ public class CustomerDAO{
 			pStmt.setDate(10, customer.getDOB());
 			
 			
+			
 			int rawsAffected = pStmt.executeUpdate();
 			
 			
 			if(rawsAffected > 0){
-				isSuccess = true;
+				
+				int accNo = getAccountNumber(customer.getEmail());
+				
+				if(accNo != -1) {
+					
+					TransactionDAO tDao = new TransactionDAO();
+						
+					Transaction transaction = new Transaction(accNo , "DEPOSIT" , customer.getBalance());
+						
+					boolean transactionDone = tDao.addNewTransaction(transaction);
+						
+					if(transactionDone) {
+						
+						isSuccess = true;
+						
+					}
+				}
 			}
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return isSuccess;
+	return isSuccess;
 	}
 	
 //	public Customer loginCheck(String email , String passHash) {
@@ -316,7 +335,7 @@ public class CustomerDAO{
 		
 	}
 	
-public boolean updatePassword(int accNo , String newPass) {
+	public boolean updatePassword(int accNo , String newPass) {
 		
 		
 		boolean isSuccess = false;
@@ -342,6 +361,33 @@ public boolean updatePassword(int accNo , String newPass) {
 		return isSuccess;
 	}
 	
+	public int getAccountNumber(String email) {
+		
+		int accNo = -1;
+		
+		String sql = "SELECT account_number FROM customerData WHERE email = ?";
+		
+		try(Connection con = DBConnection.getConnection();
+				PreparedStatement pStmt = con.prepareStatement(sql);){
+			
+			
+			pStmt.setString(1, email);
+			
+			try(ResultSet rs = pStmt.executeQuery();){
+			
+				if(rs.next()) {
+					
+					accNo = rs.getInt("account_number");
+					
+				}
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return accNo;
+	}
 }
 
 

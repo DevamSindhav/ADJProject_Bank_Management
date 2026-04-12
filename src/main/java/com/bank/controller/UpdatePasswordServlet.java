@@ -28,8 +28,8 @@ public class UpdatePasswordServlet extends HttpServlet{
 			if(session != null && session.getAttribute("accNo") != null) {
 				
 				int accNo = (int) session.getAttribute("accNo");
-				String oldPlainPass = (String) req.getParameter("oldPassword");
-				String newPlainPass = (String) req.getParameter("newPassword");
+				String oldPlainPass = req.getParameter("oldPassword");
+				String newPlainPass = req.getParameter("newPassword");
 				
 				
 				CustomerDAO cDao = new CustomerDAO();
@@ -45,24 +45,28 @@ public class UpdatePasswordServlet extends HttpServlet{
 						session.invalidate();
 						
 						//sendRedirect to Login Page
-						
+						resp.sendRedirect("login.jsp?status=password_updated");
+						return;
 					}
 					else {
-						
+						resp.sendRedirect("changepassword.jsp?error=server_error");
+						return;
 						//SendRedirect saying pin server error
 						
 					}
 					
 				}
 				else {
-					
+					resp.sendRedirect("changepassword.jsp?error=invalid_credentials");
+					return;
 					//sendReditect Change password page with error message password incorrect
 					
 				}
 				
 			}
 			else {
-				
+				resp.sendRedirect("login.jsp?error=unauthorized");
+				return;
 				//session not created redirect to LoginPage
 				
 			}
@@ -71,7 +75,8 @@ public class UpdatePasswordServlet extends HttpServlet{
 			
 			e.printStackTrace();
 			//sendRedirect to error Page or error message
-			
+			resp.sendRedirect("changepassword.jsp?error=server_error");
+			return;
 		}
 		
 	}

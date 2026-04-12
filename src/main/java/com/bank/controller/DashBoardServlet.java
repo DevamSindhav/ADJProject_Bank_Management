@@ -44,12 +44,15 @@ public class DashBoardServlet extends HttpServlet{
 					req.setAttribute("miniStatement", transactions);
 					
 					//now Dispatch the req to dashboard.jsp using forward
-					//req.RequestDispatcher("dashboard.jsp").forward(req,resp);
+					req.getRequestDispatcher("dashboard.jsp").forward(req,resp);
+					return;
 					
 				}
 				else {
 					
 					//SendRedirect to login with message Server Error pls login again
+					resp.sendRedirect("login.jsp?error=server_error");
+					return;
 					
 				}
 				
@@ -57,13 +60,13 @@ public class DashBoardServlet extends HttpServlet{
 			else {
 				
 				//sendRedirect to the LoginPage
-				
+				resp.sendRedirect("login.jsp?error=unauthorized");
+				return;
 			}
 		}catch(Exception e) {
-			
 			e.printStackTrace();
-			//sendRedirect with Server Error message
-			
+			resp.sendRedirect("login.jsp?error=server_error");
+			return;
 		}
 	}
 }

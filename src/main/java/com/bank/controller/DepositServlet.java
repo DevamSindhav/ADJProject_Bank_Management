@@ -56,25 +56,32 @@ public class DepositServlet extends HttpServlet{
 						Transaction transaction = new Transaction(accNo , "DEPOSIT" , amount);
 						boolean transactionAdded = tDao.addNewTransaction(transaction);
 							
-						if(!transactionAdded)
+						if(transactionAdded)
 						{
+							resp.sendRedirect("DashBoardServlet");
+							return;
+						}
+						else {
 							//sendRedirect with server error message
-								
+							
 							//@roll_back to previous state
 							cDao.updateBalance(accNo, oldBalance);
+							resp.sendRedirect("deposit.jsp?error=server_error");
+							return;
 						}
 						
 					}
 					
 					//******not Checking for the customer object null or not
 					//Because existence of session indirectly implies the
-					//Existence og the customer i think!!!*****
+					//Existence of the customer i think!!!*****
 					
 				}
 				else {
 					
 					//send Redirect with message: Invalid amount
-					
+					resp.sendRedirect("deposit.jsp?error=invalid_amount");
+					return;
 				}
 				
 				
@@ -82,19 +89,22 @@ public class DepositServlet extends HttpServlet{
 			else {
 				
 				//sendRedirect to the Login page
-				
+				resp.sendRedirect("login.jsp?error=unauthorized");
+				return;
 			}
 			
 		}catch(NumberFormatException e) {
 			
 			e.printStackTrace();
 			//sendRedirect with the error message of illegal argument
-			
+			resp.sendRedirect("deposit.jsp?error=invalid_amount_or_pin");
+			return;
 		}catch(Exception e) {
 			
 			e.printStackTrace();
 			//sendRedirect  with error message
-			
+			resp.sendRedirect("deposit.jsp?error=server_error");
+			return;
 		}
 		
 	}
