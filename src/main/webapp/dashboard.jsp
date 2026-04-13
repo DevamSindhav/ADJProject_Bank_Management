@@ -83,7 +83,9 @@
         }
 
         .dropdown-content a:hover { background-color: #f8fafc; }
-        .dropdown:hover .dropdown-content { display: block; }
+        
+        /* The JS will toggle this class instead of using hover */
+        .dropdown-content.show { display: block; }
 
         .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
 
@@ -202,8 +204,8 @@
         </div>
         
         <div class="dropdown">
-            <div class="profile-btn">⚙️ Profile ▼</div>
-            <div class="dropdown-content">
+            <div class="profile-btn" onclick="toggleDropdown()">⚙️ Profile ▼</div>
+            <div id="profileMenu" class="dropdown-content">
                 <a href="changepassword.jsp">🔑 Change Password</a>
                 <a href="changepin.jsp">🔢 Change PIN</a>
                 <a href="LogoutServlet">🚪 Logout</a>
@@ -225,7 +227,8 @@
     %>
         <div class="alert-box alert-success"><span>✅</span> <%= displayMsg %></div>
         
-    <%  } else if (error != null) { 
+    <%  } 
+        else if (error != null) { 
             String displayMsg = "An error occurred: " + error.replace("_", " ");
             if(error.equals("server_error")) displayMsg = "A server error occurred. Please try again later.";
     %>
@@ -304,6 +307,25 @@
 <footer style="text-align: center; padding: 30px; color: #999; font-size: 0.75rem;">
     &copy; 2026 United Bank Digital Banking. All transactions are encrypted.
 </footer>
+
+<script>
+    function toggleDropdown() {
+        document.getElementById("profileMenu").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks anywhere else on the screen
+    window.onclick = function(event) {
+        if (!event.target.matches('.profile-btn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
 
 </body>
 </html>

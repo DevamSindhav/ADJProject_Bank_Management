@@ -19,5 +19,9 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/ASUS/Downloads/jbcrypt-0.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ASUS/Downloads/taglibs-standard-jstlel-1.2.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ASUS/Downloads/taglibs-standard-spec-1.2.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ASUS/Downloads/taglibs-standard-impl-1.2.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ASUS/Downloads/taglibs-standard-compat-1.2.5.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -71,7 +71,7 @@ public class TransferServlet extends HttpServlet {
 							else {
 								cDao.updateBalance(senderAccNo, currentSenderBalance);
 								cDao.updateBalance(receiverAccNo, currentReceiverBalance);
-								response.sendRedirect("DashBoardServlet?error=server_error");
+								response.sendRedirect("transfermoney.jsp?error=server_error");
 								return;
 							}
 						}
@@ -80,7 +80,7 @@ public class TransferServlet extends HttpServlet {
 							//for roll back
 							cDao.updateBalance(senderAccNo, currentSenderBalance);
 							cDao.updateBalance(receiverAccNo, currentReceiverBalance);
-							response.sendRedirect("DashBoardServlet?error=server_error");
+							response.sendRedirect("transfermoney.jsp?error=server_error");
 							return;
 						}
 					}
