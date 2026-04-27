@@ -233,7 +233,7 @@
                         <label for="amount">Deposit Amount</label>
                         <div class="input-wrapper">
                             <span class="currency-symbol">₹</span>
-                            <input type="number" step="0.01" id="amount" name="amount" class="amount-input" placeholder="0.00" required>
+                            <input type="number" step="100" id="amount" name="amount" class="amount-input" placeholder="0.00" required>
                         </div>
                     </div>
 
